@@ -21,13 +21,13 @@ public:
 void Library::MainMenu() {
     system("cls");
 
-    std::cout << "=====Main Menu=====";
-    std::cout << "1. Add Book";
-    std::cout << "2. Display Book(s)";
-    std::cout << "3. Find Book";
-    std::cout << "4. Update Library";
-    std::cout << "5. Delete Book";
-    std::cout << "6. Exit";
+    std::cout << "=====Main Menu=====\n";
+    std::cout << "1. Add Book\n";
+    std::cout << "2. Display Book(s)\n";
+    std::cout << "3. Find Book\n";
+    std::cout << "4. Update Library\n";
+    std::cout << "5. Delete Book\n";
+    std::cout << "6. Exit\n\n";
 }
 
 // Add Book
@@ -42,7 +42,7 @@ void Library::AddBook() {
     std::string bookId;
     std::string authorName;
 
-    std::cout << "Add Books: ";
+    std::cout << "Add Books: \n";
 
     std::cout << "Book Id: ";
     std::cin >> bookId;
@@ -57,13 +57,14 @@ void Library::AddBook() {
     std::cin >> numOfBooks;
 
     // open file append|output mode
-    f.open("D:// books.txt", std::ios::out | std::ios::app);
+    f.open("books.txt", std::ios::out | std::ios::app);
     f << " " << bookId << " " << bookName << " " << authorName << " " << numOfBooks << "\n";
 
     // close file
     f.close();
 }
 
+// show list of books
 void Library::DisplayBook() {
     system("cls");
 
@@ -77,7 +78,7 @@ void Library::DisplayBook() {
 
     std::cout << "List of All Books";
 
-    f.open("D:// books.txt", std::ios::in);
+    f.open("books.txt", std::ios::in);
 
     if (!f) {
         std::cout << "\nError cannot open file.";
@@ -103,6 +104,7 @@ void Library::DisplayBook() {
     }
 }
 
+// find books
 void Library::FindBook() {
     system("cls");
 
@@ -118,8 +120,9 @@ void Library::FindBook() {
 
     std::cout << "Find Book";
 
-    f.open("D:// books.txt", std::ios::in);
+    f.open("books.txt", std::ios::in);
 
+    // open in input mode
     if (!f) {
         std::cout << "Error cannot open file";
     }
@@ -130,10 +133,106 @@ void Library::FindBook() {
         f >> bookId >> bookName;
         f >> authorName >> numOfBooks;
 
+        // till end of file
+        while (!f.eof()) {
+            if (bookID == bookId) {
+                system("cls");
+
+                std::cout << "Find Specific Book";
+                std::cout << "Book Id: " << bookId;
+                std::cout << "Book Name: " << bookName;
+                std::cout << "Author Name: " << authorName;
+                std::cout << "Number of Books: " << numOfBooks;
+
+                count++;
+                break;
+            }
+
+            f >> bookId >> bookName;
+            f >> authorName >> numOfBooks;
+        }
+
+        system("pause");
+
+        f.close();
+
+        if (count == 0) {
+            std::cout << "Error Book Not Found";
+        }
+    }
+}
+
+// update library
+void Library::UpdateLibrary() {
+    system("cls");
+
+    std::fstream f;
+    std::fstream fCopy;
+
+    int numOfBooks;
+    int numOfBooksCopy;
+    int count = 0;
+
+    std::string bookName;
+    std::string bookNameCopy;
+    std::string authorName;
+    std::string authorNameCopy;
+    std::string bookId;
+    std::string bookIdCopy;
+
+    std::cout << "Update Library record";
+
+    fCopy.open("bookcopy.txt", std::ios::app | std::ios::out);
+    f.open("book.txt", std::ios::in);
+
+    if (!f) {
+        std::cout << "Error Cannot Open file";
+    }
+    else {
 
     }
 }
 
+void Library::DeleteBook() {
+
+}
+
+void LibraryRecord() {
+    int choice;
+
+    char x;
+
+    Library l;
+
+    while (1) {
+        l.MainMenu();
+
+        std::cout << "Enter Your Choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+        case 1:
+            do {
+                l.AddBook();
+                std::cout << "Want to add another book? (y/n): ";
+                std::cin >> x;
+            } while (x == 'y');
+
+            break;
+
+        case 2:
+            l.DisplayBook();
+            break;
+
+        case 3:
+            l.FindBook();
+            break;
+        }
+    }
+}
+
 int main() {
-    
+    LibraryRecord();
+
+    return 0;
 }
