@@ -57,7 +57,7 @@ void Library::AddBook() {
     std::cin >> numOfBooks;
 
     // open file append|output mode
-    f.open("books.txt", std::ios::out | std::ios::app);
+    f.open("library.txt", std::ios::out | std::ios::app);
     f << " " << bookId << " " << bookName << " " << authorName << " " << numOfBooks << "\n";
 
     // close file
@@ -78,7 +78,8 @@ void Library::DisplayBook() {
 
     std::cout << "List of All Books";
 
-    f.open("books.txt", std::ios::in);
+    // open in input mode
+    f.open("libary.txt", std::ios::in);
 
     if (!f) {
         std::cout << "\nError cannot open file.";
@@ -120,9 +121,9 @@ void Library::FindBook() {
 
     std::cout << "Find Book";
 
-    f.open("books.txt", std::ios::in);
-
     // open in input mode
+    f.open("libary.txt", std::ios::in);
+
     if (!f) {
         std::cout << "Error cannot open file";
     }
@@ -133,7 +134,7 @@ void Library::FindBook() {
         f >> bookId >> bookName;
         f >> authorName >> numOfBooks;
 
-        // till end of file
+        // til end of file
         while (!f.eof()) {
             if (bookID == bookId) {
                 system("cls");
@@ -182,25 +183,127 @@ void Library::UpdateLibrary() {
 
     std::cout << "Update Library record";
 
-    fCopy.open("bookcopy.txt", std::ios::app | std::ios::out);
-    f.open("book.txt", std::ios::in);
+    fCopy.open("libarycopy.txt", std::ios::app | std::ios::out);
+    f.open("libary.txt", std::ios::in);
 
     if (!f) {
-        std::cout << "Error Cannot Open file";
+        std::cout << "Error Cannot Open File";
     }
     else {
+        std::cout << "Book Id: ";
+        std::cin >> bookId;
 
+        f >> bookIdCopy >> bookName;
+        f >> authorName >> numOfBooks;
+
+        // til end of file
+        while (!f.eof()) {
+            if (bookId == bookIdCopy) {
+                system("cls");
+
+                std::cout << "Update Library Records";
+                std::cout << "New Book Name: ";
+                std::cin >> bookNameCopy;
+
+                std::cout << "Author Name: ";
+                std::cin >> authorNameCopy;
+
+                std::cout << "Number of Books: ";
+                std::cin >> numOfBooksCopy;
+
+                fCopy << " " << bookId << " " << bookNameCopy << " " << authorNameCopy << " " << numOfBooksCopy << "\n";
+
+                count++;
+            }
+            else {
+                fCopy << " " << bookIdCopy << " " << bookName << " " << authorName << " " << numOfBooks << "\n";
+            }
+
+            if (count == 0) {
+                std::cout << "Book Id Not Found";
+            }
+
+            std::cout << endl;
+
+            system("pause");
+
+            // close files
+            f.close();
+            fCopy.close();
+
+            remove("library.txt");
+            rename("librarycopy.txt", "library.txt");
+        }
     }
 }
 
+// Delete Book
 void Library::DeleteBook() {
+    system("cls");
 
+    std::fstream f;
+    std::fstream fCopy;
+
+    int numOfBooks;
+    int count = 0;
+
+    std::string bookId;
+    std::string bookIdCopy;
+    std::string bookName;
+    std::string authorName;
+
+    std::cout << "\nDelete Book from Libary";
+
+    fCopy.open("librarycopy.txt", std::ios::app | std::ios::out);
+    f.open("library.txt", std::ios::in);
+
+    if (!f) {
+        std::cout << "Error Cannot Open File";
+    }
+    else {
+        std::cout << "Book Id: ";
+        std::cin >> bookId;
+
+        f >> bookIdCopy >> bookName;
+        f >> authorName >> numOfBooks;
+
+        // til end of file
+        while (!f.eof()) {
+            if (bookId == bookIdCopy) {
+                system("cls");
+
+                std::cout << "\nDelete a Book from Library";
+                std::cout << "\nBook is Successfully Deleted from Library\n";
+
+                count++;
+            }
+            else {
+                fCopy << " " << bookIdCopy << " " << bookName << " " << authorName << " " << numOfBooks;
+                f >> bookIdCopy >> bookName;
+                f >> authorName >> numOfBooks;
+            }
+
+            if (count == 0) {
+                std::cout << "Error Book Id Not Found";
+            }
+
+            system("pause");
+
+            // close files
+            f.close();
+            fCopy.close();
+
+            remove("library.txt");
+            rename("librarycopy.txt", "library.txt");
+        }
+    }
 }
 
+// Library Record list
 void LibraryRecord() {
     int choice;
 
-    char x;
+    char anotherBook;
 
     Library l;
 
@@ -210,12 +313,13 @@ void LibraryRecord() {
         std::cout << "Enter Your Choice: ";
         std::cin >> choice;
 
+        // switch case for user
         switch (choice) {
         case 1:
             do {
                 l.AddBook();
                 std::cout << "Want to add another book? (y/n): ";
-                std::cin >> x;
+                std::cin >> anotherBook;
             } while (x == 'y');
 
             break;
@@ -227,6 +331,20 @@ void LibraryRecord() {
         case 3:
             l.FindBook();
             break;
+
+        case 4:
+            l.UpdateLibrary();
+            break;
+
+        case 5:
+            l.DeleteBook();
+            break;
+
+        case 6:
+            exit(0);
+
+        default:
+            std::cout << "Error, Please Choose a number between 1-6";
         }
     }
 }
